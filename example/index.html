@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Smelly Snackbar</title>
+
+    <link href="//cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" rel="stylesheet">
+    <link href="../dist/smelly.snackbar.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Smelly Snackbar</h1>
+      <table class="u-full-width">
+        <thead>
+          <th>Props</th>
+          <th>Type</th>
+          <th>Required</th>
+          <th>Default</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td>message</td>
+            <td>String</td>
+            <td>true</td>
+            <td>null</td>
+          </tr>
+          <tr>
+            <td>actionLabel</td>
+            <td>String</td>
+            <td>false</td>
+            <td>Dismiss</td>
+          </tr>
+          <tr>
+            <td>onInit</td>
+            <td>Function</td>
+            <td>false</td>
+            <td>null</td>
+          </tr>
+          <tr>
+            <td>onShow</td>
+            <td>Function</td>
+            <td>false</td>
+            <td>null</td>
+          </tr>
+          <tr>
+            <td>onDismiss</td>
+            <td>Function</td>
+            <td>false</td>
+            <td>null</td>
+          </tr>
+        </tbody>
+      </table>
+<pre><code>&lt;Snackbar
+  message="Event added to your calendar"
+  ref="snackbar"
+  onDismiss={ this._handleDismiss }
+  onShow={ this._handleShow }
+  onInit={ this._handleInit } /&gt;</code></pre>
+
+      <p>Show snack message</p>
+      <pre><code>this.refs.snackbar.show();</code></pre>
+
+      <p>Hide snack message</p>
+      <pre><code>this.refs.snackbar.dismiss();</code></pre>
+
+      <div id="snackbar"></div>
+    </div>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/react/0.13.1/JSXTransformer.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/react/0.13.1/react.min.js"></script>
+    <script src="../dist/index.js"></script>
+    <script type="text/jsx">
+      var Snackbar = Smelly.Snackbar;
+
+      var Test = React.createClass({
+        getInitialState: function() {
+          return {
+            opened: false,
+            output: 'Component Mounted',
+            message: 'Event added to your calendar'
+          };
+        },
+
+        _handleToggle: function() {
+          if (this.state.opened) {
+            this.refs.snackbar.dismiss();
+            this.setState({ opened: false });
+          } else {
+            this.refs.snackbar.show();
+            this.setState({ opened: true });
+          }
+        },
+
+        _handleDismiss: function() {
+          this.setState({ opened: false, output: 'onDismiss called' });
+        },
+
+        _handleShow: function() {
+          this.setState({ opened: true, output: 'onOpen called' });
+        },
+
+        _handleMessageChange: function() {
+          this.setState({ message: 'Another message!' });
+        },
+
+        render: function() {
+          var output = (
+            <div>
+              <p>Events</p>
+              <pre><code>{ this.state.output }</code></pre>
+            </div>
+          );
+
+          return (
+            <div>
+              { this.state.output ? output : null }
+              <button onClick={ this._handleToggle }>Toggle</button>
+              <button onClick={ this._handleMessageChange }>Change Message</button>
+              <Snackbar
+                onShow={ this._handleShow }
+                onDismiss={ this._handleDismiss }
+                message={ this.state.message }
+                ref="snackbar"
+                />
+            </div>
+          );
+        }
+      });
+
+      React.render(
+        <Test />,
+        document.getElementById('snackbar')
+      );
+    </script>
+  </body>
+</html>
